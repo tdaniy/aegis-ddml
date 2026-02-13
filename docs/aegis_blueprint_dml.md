@@ -274,7 +274,7 @@ $$
 \sqrt{n}(\hat{\theta}-\theta_0) = -J_0^{-1}\frac{1}{\sqrt{n}}\sum_{i=1}^n \psi(W_i;\theta_0,\eta_0)+ r_n,\quad r_n=o_p(1).
 $$
 
-Hence $\hat{\theta}\rightarrow{p}\theta_0$, and
+Hence $\hat{\theta} \overset{p}{\to} \theta_0$, and
 
 $$
 \sqrt{n}(\hat{\theta}-\theta_0)\xrightarrow{d}\mathcal{N}(0,\Sigma_0),
@@ -307,14 +307,17 @@ B_{0.95}:=\mathrm{quantile}_{0.95}(|d_b|).
 $$
 
 5. Report both:
-   - Wald CI: $[\hat{\theta}\pm z_{1-\alpha/2}\,\widehat{SE}]$.
+   - Wald CI:
+     $$
+     \left[\hat{\theta}_{\mathrm{base}} \pm z_{1-\alpha/2}\,\widehat{SE}\right].
+     $$
    - Stress-envelope CI:
      $$
      \mathrm{CI}_{\text{stress}}
      =
      \left[
-     \hat{\theta}-z_{1-\alpha/2}\widehat{SE}-B_{0.95},\;
-     \hat{\theta}+z_{1-\alpha/2}\widehat{SE}+B_{0.95}
+     \hat{\theta}_{\mathrm{base}} - z_{1-\alpha/2}\,\widehat{SE} - B_{0.95},\;
+     \hat{\theta}_{\mathrm{base}} + z_{1-\alpha/2}\,\widehat{SE} + B_{0.95}
      \right].
      $$
 
@@ -597,11 +600,7 @@ where $m$ indexes candidate estimators.
 The oracle estimator uses the same orthogonal score and fold partition as AEGIS but plugs in true nuisances (e.g., $m_0, g_0$ in PLR). For Monte Carlo replication $b$, compute
 
 $$
-\hat{\Sigma}^{(b)}_{\mathrm{oracle}}
-=
-\left(\hat{J}^{(b)}_0\right)^{-1}
-\hat{\Omega}^{(b)}_0
-\left(\hat{J}^{(b)}_0\right)^{-T},
+\hat{\Sigma}^{(b)}_{\mathrm{oracle}} = \left(\hat{J}^{(b)}_0\right)^{-1} \hat{\Omega}^{(b)}_0 \left(\hat{J}^{(b)}_0\right)^{-T},
 $$
 
 with $\hat{J}^{(b)}_0$ and $\hat{\Omega}^{(b)}_0$ evaluated using true nuisance values on simulated data. Report:
