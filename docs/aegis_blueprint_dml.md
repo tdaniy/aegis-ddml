@@ -602,10 +602,7 @@ Calibration protocol (mandatory):
 For scalar targets, report relative efficiency:
 
 $$
-
 \mathrm{RE}_m := \frac{\mathrm{Var}(\hat{\theta}\_m)}{\mathrm{Var}(\hat{\theta}_{\mathrm{oracle}})},
-
-
 $$
 
 where $m$ indexes candidate estimators.
@@ -615,10 +612,7 @@ where $m$ indexes candidate estimators.
 The oracle estimator uses the same orthogonal score and fold partition as AEGIS but plugs in true nuisances (e.g., $m_0, g_0$ in PLR). For Monte Carlo replication $b$, compute
 
 $$
-
 \hat{\Sigma}^{(b)}\_{\mathrm{oracle}} = \left(\hat{J}^{(b)}\_0\right)^{-1} \hat{\Omega}^{(b)}\_0 \left(\hat{J}^{(b)}\_0\right)^{-T},
-
-
 $$
 
 with $\hat{J}^{(b)}_0$ and $\hat{\Omega}^{(b)}_0$ evaluated using true nuisance values on simulated data. Report:
