@@ -307,25 +307,15 @@ B_{0.95}:=\mathrm{quantile}_{0.95}(|d_b|).
 $$
 
 5. Report both:
-   - Wald CI:
-     $$
-     \left[\hat{\theta}_{\mathrm{base}} \pm z_{1-\alpha/2}\,\widehat{SE}\right].
-     $$
+   - Wald CI: $\left[\hat{\theta}_{\mathrm{base}} \pm z_{1-\alpha/2}\,\widehat{SE}\right]$.
    - Stress-envelope CI:
-     $$
-     \mathrm{CI}_{\text{stress}}
-     =
-     \left[
-     \hat{\theta}_{\mathrm{base}} - z_{1-\alpha/2}\,\widehat{SE} - B_{0.95},\;
-     \hat{\theta}_{\mathrm{base}} + z_{1-\alpha/2}\,\widehat{SE} + B_{0.95}
-     \right].
-     $$
+     $\mathrm{CI}_{\text{stress}} = \left[\hat{\theta}_{\mathrm{base}} - z_{1-\alpha/2}\,\widehat{SE} - B_{0.95},\; \hat{\theta}_{\mathrm{base}} + z_{1-\alpha/2}\,\widehat{SE} + B_{0.95}\right]$.
 
 Stability flag by ratio $B_{0.95}/\widehat{SE}$:
 
 - `Green`: $B_{0.95}\le 0.2\,\widehat{SE}$.
-- `Amber`: $0.2\,\widehat{SE}<B_{0.95}\le 0.5\,\widehat{SE}$.
-- `Red`: $B_{0.95}>0.5\,\widehat{SE}$.
+- `Amber`: $0.2\,\widehat{SE}\lt B_{0.95}\le 0.5\,\widehat{SE}$.
+- `Red`: $B_{0.95}\gt 0.5\,\widehat{SE}$.
 
 An analytic sensitivity proxy may be reported as supplementary:
 
