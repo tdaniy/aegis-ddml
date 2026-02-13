@@ -37,20 +37,20 @@ Completion check:
 
 ## 0.1 Notation and glossary
 
-| Symbol / Term | Meaning |
-| --- | --- |
-| $W_i=(Y_i,D_i,Z_i)$ | Observation tuple (outcome, target regressor/signal, controls) |
-| $\theta_0$ | Low-dimensional target parameter of inferential interest |
-| $\eta_0$ | Nuisance components (possibly high-dimensional/nonparametric) |
-| $\psi(W;\theta,\eta)$ | Score/estimating-equation function |
-| $J_0$ | Score Jacobian at $(\theta_0,\eta_0)$ |
-| $\Omega_0$ | Score second-moment matrix |
-| $I_k$ | Held-out index set for fold $k$ |
-| $\hat{\eta}^{(-k)}$ | Nuisance estimate trained outside fold $k$ |
-| OOF | Out-of-fold (strictly not trained on the scored observation) |
-| Cross-fitting | K-fold sample-splitting with OOF nuisance evaluation |
-| Orthogonality | First-order insensitivity of score moments to nuisance error |
-| Sandwich variance | $J^{-1}\Omega J^{-T}$ style asymptotic variance estimator |
+| Symbol / Term         | Meaning                                                        |
+| --------------------- | -------------------------------------------------------------- |
+| $W_i=(Y_i,D_i,Z_i)$   | Observation tuple (outcome, target regressor/signal, controls) |
+| $\theta_0$            | Low-dimensional target parameter of inferential interest       |
+| $\eta_0$              | Nuisance components (possibly high-dimensional/nonparametric)  |
+| $\psi(W;\theta,\eta)$ | Score/estimating-equation function                             |
+| $J_0$                 | Score Jacobian at $(\theta_0,\eta_0)$                          |
+| $\Omega_0$            | Score second-moment matrix                                     |
+| $I_k$                 | Held-out index set for fold $k$                                |
+| $\hat{\eta}^{(-k)}$   | Nuisance estimate trained outside fold $k$                     |
+| OOF                   | Out-of-fold (strictly not trained on the scored observation)   |
+| Cross-fitting         | K-fold sample-splitting with OOF nuisance evaluation           |
+| Orthogonality         | First-order insensitivity of score moments to nuisance error   |
+| Sandwich variance     | $J^{-1}\Omega J^{-T}$ style asymptotic variance estimator      |
 
 ---
 
@@ -79,7 +79,7 @@ This work makes five primary contributions:
 4. Conducts an adversarial reliability audit of contemporary DML software (DoubleML, grf-based pipelines, tmle3, and naive ML regression) under aligned estimands and learner parity.
 5. Delivers a reproducible research compendium with one-command rebuild, artifact manifests, and theory-to-code traceability.
 
-## Organization of the paper
+## Organization of the document
 
 Section 3 introduces the orthogonal score framework and presents partially linear and logistic worked examples.
 Section 4 develops the finite-sample reliability theory, including the stress-envelope CI, weak-signal boundary, and diagnostic calibration claims.
@@ -221,8 +221,7 @@ $$
 \hat{\Omega}=\frac{1}{n}\sum_{k=1}^K \sum_{i\in I_k}\hat{\psi}_i\hat{\psi}_i^\top,
 $$
 
-where $\hat{\psi}_i=\psi(W_i;\hat{\theta},\hat{\eta}^{(-k)})$.
-6. Report Wald intervals and diagnostics (fold integrity, weak signal, influence, and leakage checks).
+where $\hat{\psi}_i=\psi(W_i;\hat{\theta},\hat{\eta}^{(-k)})$. 6. Report Wald intervals and diagnostics (fold integrity, weak signal, influence, and leakage checks).
 
 ## 4.2 Regularity conditions
 
@@ -272,10 +271,7 @@ Calibration requirement (mandatory for publication):
 **Theorem 1 (Consistency, asymptotic linearity, and normality).** Under the regularity conditions above,
 
 $$
-\sqrt{n}(\hat{\theta}-\theta_0)
-=
--J_0^{-1}\frac{1}{\sqrt{n}}\sum_{i=1}^n \psi(W_i;\theta_0,\eta_0)+r_n,
-\quad r_n=o_p(1).
+\sqrt{n}(\hat{\theta}-\theta_0) = -J_0^{-1}\frac{1}{\sqrt{n}}\sum_{i=1}^n \psi(W_i;\theta_0,\eta_0)+ r_n,\quad r_n=o_p(1).
 $$
 
 Hence $\hat{\theta}\xrightarrow{p}\theta_0$, and
@@ -787,7 +783,7 @@ AEGIS occupies a distinct position within this landscape. It targets **general l
 
 ## Contribution relative to existing work
 
-Taken together, existing theory establishes the *possibility* of valid inference with machine‑learned nuisance functions, yet practical implementations remain dispersed across methodological traditions and software environments. AEGIS contributes by providing:
+Taken together, existing theory establishes the _possibility_ of valid inference with machine‑learned nuisance functions, yet practical implementations remain dispersed across methodological traditions and software environments. AEGIS contributes by providing:
 
 - a **unified score‑based interface** spanning linear and generalized linear inferential targets;
 - **default orthogonal cross‑fitted estimation** with sandwich‑robust uncertainty quantification;
@@ -808,20 +804,20 @@ This section defines concrete interfaces and connects statistical claims to impl
 
 ## 8.1 Public API contracts (v0.1)
 
-| Function | Required inputs | Output contract | Determinism contract | Failure behavior |
-| --- | --- | --- | --- | --- |
-| `aegis_spec()` | learner, target, strategy; optional nuis/controls | S3 `aegis_spec` object with validated fields | no RNG use | error on missing/invalid components |
-| `strategy_crossfit()` | integer `v >= 2`, optional repeats, optional `seed`, optional `parallel_backend`, optional `n_jobs` | S3 strategy object with fold settings and backend metadata | deterministic given explicit seed and fixed backend config | error on invalid `v` or backend config |
-| `learner_base()` | `fit_fun`, `predict_fun` callables | learner wrapper with fit/predict hooks | deterministic if learner+seed deterministic | error on non-function arguments |
-| `nuis_spec()` | nuisance learner declarations for outcome/signal | nuisance specification object | deterministic metadata object | error on missing nuisance entries |
-| `target_lm()` | formula with target nuisance regressor | target object with LM tag | deterministic metadata object | error on malformed formula |
-| `target_glm()` | formula and family | target object with GLM tag | deterministic metadata object | error on invalid family |
-| `artifact_schema()` | optional `schema_version` | canonical JSON-schema-like artifact spec | deterministic static object | error on unknown schema version |
-| `validate_artifacts()` | fit object or artifact directory | validation report with pass/fail and violations | deterministic function of artifacts | error on unreadable/malformed artifacts |
-| `provenance_digest()` | canonicalized data snapshot, folds, learner specs, tuned hyperparameters, runtime controls | named hash map for provenance fields | deterministic under canonical serialization | error on unsupported object class |
-| `aegis_fit()` | spec, data, controls (including `seed`, runtime budget, sensitivity repetitions) | S3 `aegis_fit` with estimates, SEs, diagnostics, artifacts, `schema_version`, `result_version`, `provenance_hashes` | deterministic under fixed seed and deterministic learners | error/warning on convergence, leakage, or schema violations |
-| `summary.aegis_fit()` | fit object | compact inferential + diagnostic summary | deterministic function of fit object | error on malformed fit object |
-| `confint.aegis_fit()` | fit object, confidence level | CI endpoints from robust variance | deterministic function of fit object | warning/error if SE unavailable |
+| Function               | Required inputs                                                                                     | Output contract                                                                                                     | Determinism contract                                       | Failure behavior                                            |
+| ---------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------- |
+| `aegis_spec()`         | learner, target, strategy; optional nuis/controls                                                   | S3 `aegis_spec` object with validated fields                                                                        | no RNG use                                                 | error on missing/invalid components                         |
+| `strategy_crossfit()`  | integer `v >= 2`, optional repeats, optional `seed`, optional `parallel_backend`, optional `n_jobs` | S3 strategy object with fold settings and backend metadata                                                          | deterministic given explicit seed and fixed backend config | error on invalid `v` or backend config                      |
+| `learner_base()`       | `fit_fun`, `predict_fun` callables                                                                  | learner wrapper with fit/predict hooks                                                                              | deterministic if learner+seed deterministic                | error on non-function arguments                             |
+| `nuis_spec()`          | nuisance learner declarations for outcome/signal                                                    | nuisance specification object                                                                                       | deterministic metadata object                              | error on missing nuisance entries                           |
+| `target_lm()`          | formula with target nuisance regressor                                                              | target object with LM tag                                                                                           | deterministic metadata object                              | error on malformed formula                                  |
+| `target_glm()`         | formula and family                                                                                  | target object with GLM tag                                                                                          | deterministic metadata object                              | error on invalid family                                     |
+| `artifact_schema()`    | optional `schema_version`                                                                           | canonical JSON-schema-like artifact spec                                                                            | deterministic static object                                | error on unknown schema version                             |
+| `validate_artifacts()` | fit object or artifact directory                                                                    | validation report with pass/fail and violations                                                                     | deterministic function of artifacts                        | error on unreadable/malformed artifacts                     |
+| `provenance_digest()`  | canonicalized data snapshot, folds, learner specs, tuned hyperparameters, runtime controls          | named hash map for provenance fields                                                                                | deterministic under canonical serialization                | error on unsupported object class                           |
+| `aegis_fit()`          | spec, data, controls (including `seed`, runtime budget, sensitivity repetitions)                    | S3 `aegis_fit` with estimates, SEs, diagnostics, artifacts, `schema_version`, `result_version`, `provenance_hashes` | deterministic under fixed seed and deterministic learners  | error/warning on convergence, leakage, or schema violations |
+| `summary.aegis_fit()`  | fit object                                                                                          | compact inferential + diagnostic summary                                                                            | deterministic function of fit object                       | error on malformed fit object                               |
+| `confint.aegis_fit()`  | fit object, confidence level                                                                        | CI endpoints from robust variance                                                                                   | deterministic function of fit object                       | warning/error if SE unavailable                             |
 
 ## 8.2 Core invariants
 
@@ -837,19 +833,19 @@ This section defines concrete interfaces and connects statistical claims to impl
 
 ## 8.3 Traceability matrix
 
-| Scientific claim | Primary module(s) | Required tests | Required artifact(s) |
-| --- | --- | --- | --- |
-| Strict out-of-fold nuisance evaluation | `R/crossfit.R`, `R/nuisance.R` | `test-crossfit-integrity.R` | `artifacts/folds_*.rds` |
-| Orthogonal score implementation | `R/inference_lm.R`, `R/inference_glm.R` | `test-lm-orthogonal.R`, `test-glm-orthogonal.R` | score residual diagnostics |
-| Nuisance-rate proxy and thresholding | `R/diagnostics_rates.R` | `test-rates-proxy.R` | `diagnostics_rates.csv` |
-| Finite-sample stress envelope | `R/diagnostics_sensitivity.R` | `test-sensitivity-envelope.R` | `diagnostics_sensitivity.csv` |
-| Robust uncertainty quantification | `R/inference_*.R`, `R/methods.R` | CI/SE sanity tests | `estimates.csv`, `diagnostics.csv` |
-| Reproducibility under fixed seed | `R/aegis_fit.R` | `test-reproducibility.R`, `test-parallel-rng.R` | `session_info.txt`, `renv.lock`, `artifacts/manifest_*.json` |
-| Schema/provenance integrity | `R/artifacts.R` | `test-artifact-schema.R`, `test-provenance-hashes.R` | `artifacts/provenance_hashes_*.json` |
-| Coverage/efficiency claims in manuscript | `analysis/sim/*.R` | simulation regression tests | `summary_metrics.csv`, figures/tables |
-| Diagnostic calibration claims | `analysis/sim/calibration_study.R`, `analysis/figures/figC_roc.R` | calibration sanity tests | `diagnostics_operating_chars.csv` |
-| Weak-signal boundary claims | `analysis/sim/boundary_experiment.R`, `analysis/figures/figB_boundary.R` | boundary regression tests | `boundary_summary.csv` |
-| Adversarial audit claims | `analysis/sim/adversarial_benchmark.R`, `analysis/figures/figE_pareto.R` | comparator parity tests | `adversarial_audit_summary.csv` |
+| Scientific claim                         | Primary module(s)                                                        | Required tests                                       | Required artifact(s)                                         |
+| ---------------------------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------- | ------------------------------------------------------------ |
+| Strict out-of-fold nuisance evaluation   | `R/crossfit.R`, `R/nuisance.R`                                           | `test-crossfit-integrity.R`                          | `artifacts/folds_*.rds`                                      |
+| Orthogonal score implementation          | `R/inference_lm.R`, `R/inference_glm.R`                                  | `test-lm-orthogonal.R`, `test-glm-orthogonal.R`      | score residual diagnostics                                   |
+| Nuisance-rate proxy and thresholding     | `R/diagnostics_rates.R`                                                  | `test-rates-proxy.R`                                 | `diagnostics_rates.csv`                                      |
+| Finite-sample stress envelope            | `R/diagnostics_sensitivity.R`                                            | `test-sensitivity-envelope.R`                        | `diagnostics_sensitivity.csv`                                |
+| Robust uncertainty quantification        | `R/inference_*.R`, `R/methods.R`                                         | CI/SE sanity tests                                   | `estimates.csv`, `diagnostics.csv`                           |
+| Reproducibility under fixed seed         | `R/aegis_fit.R`                                                          | `test-reproducibility.R`, `test-parallel-rng.R`      | `session_info.txt`, `renv.lock`, `artifacts/manifest_*.json` |
+| Schema/provenance integrity              | `R/artifacts.R`                                                          | `test-artifact-schema.R`, `test-provenance-hashes.R` | `artifacts/provenance_hashes_*.json`                         |
+| Coverage/efficiency claims in manuscript | `analysis/sim/*.R`                                                       | simulation regression tests                          | `summary_metrics.csv`, figures/tables                        |
+| Diagnostic calibration claims            | `analysis/sim/calibration_study.R`, `analysis/figures/figC_roc.R`        | calibration sanity tests                             | `diagnostics_operating_chars.csv`                            |
+| Weak-signal boundary claims              | `analysis/sim/boundary_experiment.R`, `analysis/figures/figB_boundary.R` | boundary regression tests                            | `boundary_summary.csv`                                       |
+| Adversarial audit claims                 | `analysis/sim/adversarial_benchmark.R`, `analysis/figures/figE_pareto.R` | comparator parity tests                              | `adversarial_audit_summary.csv`                              |
 
 ## 8.4 Artifact schema and provenance minimum fields
 
@@ -923,45 +919,45 @@ Each simulation program must write a minimal, reviewer-auditable bundle:
 
 ## 9.1 Risk register
 
-| Risk | Trigger | Impact | Mitigation | Fallback |
-| --- | --- | --- | --- | --- |
-| Data leakage | in-fold prediction reuse | invalid inference | strict fold metadata checks | fail-fast and block release |
-| Hyperparameter leakage | tuning uses any held-out fold observations | optimistic nuisance fit, invalid CI | nested CV strictly inside training complements, fold-audit logs | invalidate run, re-tune with corrected splits |
-| Orthogonality mis-specification | score implementation error or omitted score terms | first-order bias, coverage failure | symbolic/numerical score checks, misspecification stress DGP | mark estimand unsupported until score fixed |
-| Near-singular Jacobian | weak identification or unstable design | exploding variance, unstable estimates | Jacobian conditioning diagnostics, ridge-stabilized solve warnings | report unsupported regime |
-| Small-sample variance underestimation | aggressive asymptotics at low $n$ | anti-conservative inference | HCk and bootstrap/multiplier checks, stress-envelope CI | require robust interval as primary |
-| Diagnostic miscalibration | FAIL/WARN thresholds not tied to coverage | false reassurance or over-warning | calibration study with ROC/AUC and $P(\text{miss}\mid \text{FAIL})$ | treat diagnostics as warnings only |
-| Weak signal | near-zero residualized nuisance variance | unstable SE/CI | weak-signal diagnostics + warning threshold | report as unsupported regime |
-| GLM non-convergence | Newton iterations exceed cap | missing estimates | line search, bounded steps, better init | switch to robust root solver |
-| Parallel RNG drift | backend-dependent RNG behavior | irreproducible parallel runs | deterministic substream mapping and parity tests vs sequential | disable parallel mode for release artifact |
-| Non-determinism | inconsistent RNG handling | irreproducible results | single master seed + persisted fold seeds | quarantine failing tests/artifacts |
-| Memory pressure | large learners or repeated resampling | OOM failures, partial artifacts | memory budget checks, checkpointed artifact writes | reduce learner set / batch size |
-| CRAN/runtime constraints | long checks or heavy dependencies | blocked package release | CI-lite benchmark profile, optional heavy dependencies | split heavyweight analyses into external pipeline |
-| Runtime blow-up | nested tuning on large grid | delayed release | cap grid for CI pipeline, parallelize batch runs | staged benchmark runs |
-| Untrusted custom learner behavior | arbitrary user learner code | execution safety risk | explicit trust model, restricted interfaces, input/output validation | disable custom learner mode in reproducible release runs |
+| Risk                                  | Trigger                                           | Impact                                 | Mitigation                                                           | Fallback                                                 |
+| ------------------------------------- | ------------------------------------------------- | -------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------- |
+| Data leakage                          | in-fold prediction reuse                          | invalid inference                      | strict fold metadata checks                                          | fail-fast and block release                              |
+| Hyperparameter leakage                | tuning uses any held-out fold observations        | optimistic nuisance fit, invalid CI    | nested CV strictly inside training complements, fold-audit logs      | invalidate run, re-tune with corrected splits            |
+| Orthogonality mis-specification       | score implementation error or omitted score terms | first-order bias, coverage failure     | symbolic/numerical score checks, misspecification stress DGP         | mark estimand unsupported until score fixed              |
+| Near-singular Jacobian                | weak identification or unstable design            | exploding variance, unstable estimates | Jacobian conditioning diagnostics, ridge-stabilized solve warnings   | report unsupported regime                                |
+| Small-sample variance underestimation | aggressive asymptotics at low $n$                 | anti-conservative inference            | HCk and bootstrap/multiplier checks, stress-envelope CI              | require robust interval as primary                       |
+| Diagnostic miscalibration             | FAIL/WARN thresholds not tied to coverage         | false reassurance or over-warning      | calibration study with ROC/AUC and $P(\text{miss}\mid \text{FAIL})$  | treat diagnostics as warnings only                       |
+| Weak signal                           | near-zero residualized nuisance variance          | unstable SE/CI                         | weak-signal diagnostics + warning threshold                          | report as unsupported regime                             |
+| GLM non-convergence                   | Newton iterations exceed cap                      | missing estimates                      | line search, bounded steps, better init                              | switch to robust root solver                             |
+| Parallel RNG drift                    | backend-dependent RNG behavior                    | irreproducible parallel runs           | deterministic substream mapping and parity tests vs sequential       | disable parallel mode for release artifact               |
+| Non-determinism                       | inconsistent RNG handling                         | irreproducible results                 | single master seed + persisted fold seeds                            | quarantine failing tests/artifacts                       |
+| Memory pressure                       | large learners or repeated resampling             | OOM failures, partial artifacts        | memory budget checks, checkpointed artifact writes                   | reduce learner set / batch size                          |
+| CRAN/runtime constraints              | long checks or heavy dependencies                 | blocked package release                | CI-lite benchmark profile, optional heavy dependencies               | split heavyweight analyses into external pipeline        |
+| Runtime blow-up                       | nested tuning on large grid                       | delayed release                        | cap grid for CI pipeline, parallelize batch runs                     | staged benchmark runs                                    |
+| Untrusted custom learner behavior     | arbitrary user learner code                       | execution safety risk                  | explicit trust model, restricted interfaces, input/output validation | disable custom learner mode in reproducible release runs |
 
 ## 9.2 Quantitative acceptance criteria (v0.1)
 
-| Category | Metric | Threshold |
-| --- | --- | --- |
-| Coverage validity | Empirical 95% CI coverage for AEGIS at $n \ge 500$ | between 93% and 97% on core DGPs |
-| Stress coverage | Empirical 95% CI coverage on heavy-tail/heteroskedastic and weak-signal DGPs | at least 90% with robust interval mode |
-| Stress-CI bound check | Stress-CI miss rate vs estimated nonasymptotic bound | bound holds in >= 90% of primary grid cells |
-| Boundary sharpness | Coverage separation across $\psi = 2a - \tfrac{1}{2} - \beta$ | median coverage for $\psi > 0.10$ >= 0.93 and for $\psi < -0.10$ <= 0.90 |
-| Diagnostic calibration | ROC/AUC and risk stratification | AUC >= 0.7 and $P(\text{miss}\mid \text{FAIL})$ >= 0.7 in stress regimes |
-| Efficiency | Average CI length vs sample-split | AEGIS mean CI length <= 0.90 * sample-split in >= 70% of grid cells |
-| Bias control | Absolute bias of AEGIS vs naive | AEGIS absolute bias <= naive in >= 80% of grid cells |
-| Adversarial audit | Coverage improvement vs DoubleML in weak-signal regimes | AEGIS coverage >= DoubleML in >= 70% of pre-registered weak-signal cells on the primary grid, with CI length ratio <= 1.5 (extreme-stress cells reported separately) |
-| Nuisance-rate proxy | Product-rate proxy $S=a_1+a_2$ | lower 80% CI endpoint > 0.5 in >= 80% of core grid cells |
-| Sensitivity stability | Stress-envelope ratio $B_{0.95}/\widehat{SE}$ | median <= 0.5 and `Red` rate <= 10% on core grid |
-| Identification stability | Jacobian conditioning diagnostics | min singular value > 1e-6 and condition number < 1e6 in >= 95% of core runs |
-| Convergence | GLM fit convergence rate | >= 99% successful convergences |
-| Leakage control | Fold-integrity failures | exactly 0 tolerated |
-| Artifact contract | Schema validation success | 100% pass for release artifacts |
-| Provenance completeness | Required provenance hashes present | 100% required fields present |
-| Parallel reproducibility | sequential vs parallel parity under deterministic learners | exact equality on scalar summaries |
-| Reproducibility | Hash/summary equality across two reruns with fixed seed | exact match on tables and scalar metrics |
-| Testing | Local test suite pass rate | 100% pass, 0 flaky failures across 3 consecutive runs |
+| Category                 | Metric                                                                       | Threshold                                                                                                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Coverage validity        | Empirical 95% CI coverage for AEGIS at $n \ge 500$                           | between 93% and 97% on core DGPs                                                                                                                                     |
+| Stress coverage          | Empirical 95% CI coverage on heavy-tail/heteroskedastic and weak-signal DGPs | at least 90% with robust interval mode                                                                                                                               |
+| Stress-CI bound check    | Stress-CI miss rate vs estimated nonasymptotic bound                         | bound holds in >= 90% of primary grid cells                                                                                                                          |
+| Boundary sharpness       | Coverage separation across $\psi = 2a - \tfrac{1}{2} - \beta$                | median coverage for $\psi > 0.10$ >= 0.93 and for $\psi < -0.10$ <= 0.90                                                                                             |
+| Diagnostic calibration   | ROC/AUC and risk stratification                                              | AUC >= 0.7 and $P(\text{miss}\mid \text{FAIL})$ >= 0.7 in stress regimes                                                                                             |
+| Efficiency               | Average CI length vs sample-split                                            | AEGIS mean CI length <= 0.90 \* sample-split in >= 70% of grid cells                                                                                                 |
+| Bias control             | Absolute bias of AEGIS vs naive                                              | AEGIS absolute bias <= naive in >= 80% of grid cells                                                                                                                 |
+| Adversarial audit        | Coverage improvement vs DoubleML in weak-signal regimes                      | AEGIS coverage >= DoubleML in >= 70% of pre-registered weak-signal cells on the primary grid, with CI length ratio <= 1.5 (extreme-stress cells reported separately) |
+| Nuisance-rate proxy      | Product-rate proxy $S=a_1+a_2$                                               | lower 80% CI endpoint > 0.5 in >= 80% of core grid cells                                                                                                             |
+| Sensitivity stability    | Stress-envelope ratio $B_{0.95}/\widehat{SE}$                                | median <= 0.5 and `Red` rate <= 10% on core grid                                                                                                                     |
+| Identification stability | Jacobian conditioning diagnostics                                            | min singular value > 1e-6 and condition number < 1e6 in >= 95% of core runs                                                                                          |
+| Convergence              | GLM fit convergence rate                                                     | >= 99% successful convergences                                                                                                                                       |
+| Leakage control          | Fold-integrity failures                                                      | exactly 0 tolerated                                                                                                                                                  |
+| Artifact contract        | Schema validation success                                                    | 100% pass for release artifacts                                                                                                                                      |
+| Provenance completeness  | Required provenance hashes present                                           | 100% required fields present                                                                                                                                         |
+| Parallel reproducibility | sequential vs parallel parity under deterministic learners                   | exact equality on scalar summaries                                                                                                                                   |
+| Reproducibility          | Hash/summary equality across two reruns with fixed seed                      | exact match on tables and scalar metrics                                                                                                                             |
+| Testing                  | Local test suite pass rate                                                   | 100% pass, 0 flaky failures across 3 consecutive runs                                                                                                                |
 
 ## 9.3 Minimal publishability checklist (mandatory evidence bundle)
 
@@ -1027,13 +1023,13 @@ Comparator and external-domain expansion is tracked as planned follow-up in Sect
 
 # 11. Selected references
 
-- Belloni, A., Chernozhukov, V., and Hansen, C. (2014). Inference on treatment effects after selection among high-dimensional controls. *Review of Economic Studies*.
-- Chernozhukov, V., Chetverikov, D., Demirer, M., Duflo, E., Hansen, C., Newey, W., and Robins, J. (2018). Double/debiased machine learning for treatment and structural parameters. *The Econometrics Journal*.
-- Javanmard, A., and Montanari, A. (2014). Confidence intervals and hypothesis testing for high-dimensional regression. *Journal of Machine Learning Research*.
-- Neyman, J. (1959). Optimal asymptotic tests of composite statistical hypotheses. In *Probability and Statistics*.
-- van de Geer, S., Buhlmann, P., Ritov, Y., and Dezeure, R. (2014). On asymptotically optimal confidence regions and tests for high-dimensional models. *Annals of Statistics*.
-- van der Laan, M., and Rose, S. (2011). *Targeted Learning*. Springer.
-- Zhang, C.-H., and Zhang, S. S. (2014). Confidence intervals for low-dimensional parameters in high-dimensional linear models. *Journal of the Royal Statistical Society: Series B*.
+- Belloni, A., Chernozhukov, V., and Hansen, C. (2014). Inference on treatment effects after selection among high-dimensional controls. _Review of Economic Studies_.
+- Chernozhukov, V., Chetverikov, D., Demirer, M., Duflo, E., Hansen, C., Newey, W., and Robins, J. (2018). Double/debiased machine learning for treatment and structural parameters. _The Econometrics Journal_.
+- Javanmard, A., and Montanari, A. (2014). Confidence intervals and hypothesis testing for high-dimensional regression. _Journal of Machine Learning Research_.
+- Neyman, J. (1959). Optimal asymptotic tests of composite statistical hypotheses. In _Probability and Statistics_.
+- van de Geer, S., Buhlmann, P., Ritov, Y., and Dezeure, R. (2014). On asymptotically optimal confidence regions and tests for high-dimensional models. _Annals of Statistics_.
+- van der Laan, M., and Rose, S. (2011). _Targeted Learning_. Springer.
+- Zhang, C.-H., and Zhang, S. S. (2014). Confidence intervals for low-dimensional parameters in high-dimensional linear models. _Journal of the Royal Statistical Society: Series B_.
 - Software comparators: DoubleML, grf, tmle3, econml (project documentation and package papers).
 
 ---
@@ -1074,4 +1070,4 @@ The first publication will focus on:
 
 ---
 
-*End of DML‑aligned blueprint.*
+_End of DML‑aligned blueprint._
