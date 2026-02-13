@@ -362,8 +362,10 @@ Let $R_n$ denote the nuisance remainder in the asymptotic expansion of $\hat{\th
 - a stress-quantile estimation error bound
 
 $$
-\Pr(|\hat{q}_{0.95}-q_{0.95}|>u_B)\le \delta_B$, with $u_B=O(B^{-1/2}),
+\Pr(|\hat{q}_{0.95}-q_{0.95}|>u_B)\le \delta_B$,
 $$
+
+with $u_B=O(B^{-1/2})$,
 
 - nominal Wald calibration for the influence-function term at level $\alpha$.
 
