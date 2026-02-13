@@ -359,7 +359,12 @@ This section converts the stress-envelope and diagnostics from engineering heuri
 Let $R_n$ denote the nuisance remainder in the asymptotic expansion of $\hat{\theta}$, and let $\kappa_n$ denote the signal-strength/identification scale (e.g., $\kappa_n := E[V^2]$ in PLR). Let $M_n := \mathbf{1}\{\theta_0 \notin \mathrm{CI}_{\text{stress}}\}$. Assume:
 
 - a remainder control $\Pr(|R_n|/\kappa_n > r_n) \le \rho_n$,
-- a stress-quantile estimation error bound $\Pr(|\hat{q}_{0.95}-q_{0.95}|>u_B)\le \delta_B$, with $u_B=O(B^{-1/2})$,
+- a stress-quantile estimation error bound
+
+$$
+\Pr(|\hat{q}_{0.95}-q_{0.95}|>u_B)\le \delta_B$, with $u_B=O(B^{-1/2}),
+$$
+
 - nominal Wald calibration for the influence-function term at level $\alpha$.
 
 Then there exist constants $C_1,C_2>0$ such that
