@@ -229,27 +229,44 @@ We impose standard semiparametric conditions:
 
 - **Orthogonality:** $\partial_r \mathbb{E}[\psi(W;\theta_0,\eta_0+r h)]|_{r=0}=0$ for all $h\in\mathcal{H}$.
 - **Identification:** $J_0$ is nonsingular in a neighborhood of $\theta_0$.
-- **Nuisance rates:** cross‑fitted nuisance errors satisfy product‑rate conditions (e.g., $\|\hat{\eta}_1-\eta_{1,0}\| \cdot \|\hat{\eta}_2-\eta_{2,0}\|=o_p(n^{-1/2})$), which are implied by per‑nuisance rates like $o_p(n^{-1/4})$ in common DML setups.
+- **Nuisance rates:** cross‑fitted nuisance errors satisfy product‑rate conditions (e.g.,
+
+$$
+\|\hat{\eta}_1-\eta_{1,0}\| \cdot \|\hat{\eta}_2-\eta_{2,0}\|=o_p(n^{-1/2})
+$$
+
+), which are implied by per‑nuisance rates like $o_p(n^{-1/4})$ in common DML setups.
+
+$$
 - **Moments:** $\mathbb{E}\|\psi(W;\theta_0,\eta_0)\|^2<\infty$ and $\Omega_0:=\mathbb{E}[\psi\psi^\top]$ is positive definite.
 
 Operationalization of nuisance-rate assumptions is mandatory in empirical and simulation reports:
 
 For nuisance components $j\in\{1,2\}$ and training fractions $f\in\{0.4,0.6,0.8,1.0\}$, define repeated cross-fitted out-of-fold loss gaps
 
+
 $$
-\Delta_j(f)=\mathrm{OOF\_Loss}_j(f)-\mathrm{OOF\_Loss}_j(1.0).
+
+\Delta_j(f)=\mathrm{OOF_Loss}\_j(f)-\mathrm{OOF_Loss}\_j(1.0).
+
 $$
 
 Estimate learning-curve slopes from
 
+
 $$
+
 \log(\Delta_j(f)+\epsilon)=c_j-2a_j\log(nf), \quad \epsilon=10^{-6},
+
 $$
 
 and define the product-rate proxy
 
+
 $$
+
 S:=a_1+a_2.
+
 $$
 
 Interpretation and thresholding rule:
@@ -270,16 +287,22 @@ Calibration requirement (mandatory for publication):
 
 **Theorem 1 (Consistency, asymptotic linearity, and normality).** Under the regularity conditions above,
 
+
 $$
-\sqrt{n}(\hat{\theta}-\theta_0) = -J_0^{-1}\frac{1}{\sqrt{n}}\sum_{i=1}^n \psi(W_i;\theta_0,\eta_0)+ r_n,\quad r_n=o_p(1).
+
+\sqrt{n}(\hat{\theta}-\theta*0) = -J_0^{-1}\frac{1}{\sqrt{n}}\sum*{i=1}^n \psi(W_i;\theta_0,\eta_0)+ r_n,\quad r_n=o_p(1).
+
 $$
 
 Hence $\hat{\theta} \overset{p}{\to} \theta_0$, and
 
+
 $$
+
 \sqrt{n}(\hat{\theta}-\theta_0)\xrightarrow{d}\mathcal{N}(0,\Sigma_0),
 \quad
 \Sigma_0=J_0^{-1}\Omega_0J_0^{-T}.
+
 $$
 
 The influence function is $\phi(W)=-J_0^{-1}\psi(W;\theta_0,\eta_0)$.
@@ -302,21 +325,30 @@ Finite-sample sensitivity bound (mandatory robustness output):
 3. Compute perturbations $d_b=\hat{\theta}^{(b)}-\hat{\theta}_{\mathrm{base}}$.
 4. Define stress-envelope radius
 
+
 $$
-B_{0.95}:=\mathrm{quantile}_{0.95}(|d_b|).
+
+B*{0.95}:=\mathrm{quantile}*{0.95}(|d_b|).
+
 $$
 
 5. Report both:
    - Wald CI:
 
+
 $$
+
 \left[\hat{\theta}_{\mathrm{base}} \pm z_{1-\alpha/2}\,\widehat{SE}\right].
+
 $$
 
 - Stress-envelope CI:
 
+
 $$
-\mathrm{CI}_{\text{stress}} = \left[\hat{\theta}_{\mathrm{base}} - z_{1-\alpha/2}\,\widehat{SE} - B_{0.95},\; \hat{\theta}_{\mathrm{base}} + z_{1-\alpha/2}\,\widehat{SE} + B_{0.95}\right].
+
+\mathrm{CI}_{\text{stress}} = \left[\hat{\theta}_{\mathrm{base}} - z*{1-\alpha/2}\,\widehat{SE} - B*{0.95},\; \hat{\theta}_{\mathrm{base}} + z_{1-\alpha/2}\,\widehat{SE} + B\_{0.95}\right].
+
 $$
 
 Stability flag by ratio $B_{0.95}/\widehat{SE}$:
@@ -327,8 +359,11 @@ Stability flag by ratio $B_{0.95}/\widehat{SE}$:
 
 An analytic sensitivity proxy may be reported as supplementary:
 
+
 $$
-B_{\mathrm{analytic}}:=\|\hat{J}^{-1}\|_{\mathrm{op}}\hat{e}_1\hat{e}_2,
+
+B*{\mathrm{analytic}}:=\|\hat{J}^{-1}\|*{\mathrm{op}}\hat{e}\_1\hat{e}\_2,
+
 $$
 
 where $\hat{e}_j$ are nuisance-error proxy magnitudes. Release decisions are based on the resampling stress envelope, not solely the analytic proxy.
@@ -337,8 +372,11 @@ Weak finite-sample guarantee (target statement):
 
 Under asymptotic linearity, bounded second moments of fold-seed perturbations, and first-order independence between fold perturbations and influence-function noise, there exists $\delta_n \to 0$ such that
 
+
 $$
-\Pr(\theta_0 \in \mathrm{CI}_{\text{stress}}) \ge 1 - \alpha - \delta_n.
+
+\Pr(\theta*0 \in \mathrm{CI}*{\text{stress}}) \ge 1 - \alpha - \delta_n.
+
 $$
 
 Section 4.5 provides a nonasymptotic bound template suitable for empirical validation.
@@ -357,8 +395,11 @@ Let $R_n$ denote the nuisance remainder in the asymptotic expansion of $\hat{\th
 
 Then there exist constants $C_1,C_2>0$ such that
 
+
 $$
+
 \Pr(M_n=1) \le \alpha + \rho_n + \delta_B + C_1 r_n + C_2 u_B.
+
 $$
 
 If $\rho_n,\delta_B,r_n,u_B \to 0$, then $\liminf_{n\to\infty}\Pr(\theta_0\in \mathrm{CI}_{\text{stress}})\ge 1-\alpha$.
@@ -367,8 +408,11 @@ If $\rho_n,\delta_B,r_n,u_B \to 0$, then $\liminf_{n\to\infty}\Pr(\theta_0\in \m
 
 Let $\kappa_n := E[V^2] \asymp n^{-\beta}$ and suppose nuisance rates satisfy $\|\hat{g}-g_0\|=O_p(n^{-a})$ and $\|\hat{m}-m_0\|=O_p(n^{-a})$. The scaled remainder behaves as $O_p(n^{-2a+\beta})$, so first-order Wald reliability requires
 
+
 $$
+
 2a > \frac{1}{2} + \beta \quad \text{(equivalently, } \beta < 2a - \tfrac{1}{2}\text{)}.
+
 $$
 
 This boundary provides a mechanism explanation for weak-signal under-coverage and motivates diagnostics based on $\hat{\kappa}$ and fold-seed instability.
@@ -377,9 +421,12 @@ This boundary provides a mechanism explanation for weak-signal under-coverage an
 
 Let $M_n$ be the CI-miss event, $E_n$ a latent bad event (large remainder), and $F_n$ a diagnostic FAIL flag. Under detection-quality and risk-separation assumptions with error rates $\eta_0,\eta_1$ and miss risks $p_1>p_0$, a conservative lower bound holds:
 
+
 $$
-\Pr(M_n=1 \mid F_n=1) \ge p_1 - \Delta_n,\quad
-\Delta_n := (\eta_0+\eta_1)/\pi_{\min}.
+
+\Pr(M*n=1 \mid F_n=1) \ge p_1 - \Delta_n,\quad
+\Delta_n := (\eta_0+\eta_1)/\pi*{\min}.
+
 $$
 
 This justifies reporting $P(\text{miss}\mid \text{FAIL})$, risk-gap metrics, and ROC/AUC as primary diagnostic summaries.
@@ -455,9 +502,12 @@ Robustness variants (required):
 
 Use the same $m_0(Z), g_0(Z)$ structure as DGP 1 but with
 
+
 $$
+
 v \sim t_5 / \sqrt{5/3}, \quad
 \varepsilon = (0.5 + 0.5|Z_1|)\,u, \quad u \sim t_5 / \sqrt{5/3}.
+
 $$
 
 This DGP tests robustness of standard-error estimation and CI coverage under non-Gaussian tails and conditional heteroskedasticity.
@@ -466,8 +516,11 @@ This DGP tests robustness of standard-error estimation and CI coverage under non
 
 Generate outcomes with an interaction omitted from the target score:
 
+
 $$
+
 Y=\theta_0 D + g_0(Z) + 0.5\,D Z_1 + \varepsilon.
+
 $$
 
 Fit using the baseline partially linear score that omits $DZ_1$. This quantifies sensitivity to orthogonality/model misspecification.
@@ -476,8 +529,11 @@ Fit using the baseline partially linear score that omits $DZ_1$. This quantifies
 
 Use
 
+
 $$
+
 D=m_0(Z)+\sigma_v v,\quad \sigma_v\in\{0.15,0.30\},
+
 $$
 
 with DGP 1 outcome structure. This forces near-zero residualized signal variance and stress-tests instability warnings.
@@ -486,9 +542,12 @@ with DGP 1 outcome structure. This forces near-zero residualized signal variance
 
 Introduce cluster random effects:
 
+
 $$
-Y_{ic}=\theta_0 D_{ic}+g_0(Z_{ic})+\alpha_c+\varepsilon_{ic},\quad
-D_{ic}=m_0(Z_{ic})+\nu_c+v_{ic},
+
+Y*{ic}=\theta_0 D*{ic}+g*0(Z*{ic})+\alpha*c+\varepsilon*{ic},\quad
+D*{ic}=m_0(Z*{ic})+\nu*c+v*{ic},
+
 $$
 
 with $c\in\{1,\dots,G\}$ and cluster sizes varying by design. Report both iid-robust and cluster-robust inference to quantify dependence impact.
@@ -587,8 +646,11 @@ Calibration protocol (mandatory):
 
 For scalar targets, report relative efficiency:
 
+
 $$
-\mathrm{RE}_m := \frac{\mathrm{Var}(\hat{\theta}_m)}{\mathrm{Var}(\hat{\theta}_{\mathrm{oracle}})},
+
+\mathrm{RE}_m := \frac{\mathrm{Var}(\hat{\theta}\_m)}{\mathrm{Var}(\hat{\theta}_{\mathrm{oracle}})},
+
 $$
 
 where $m$ indexes candidate estimators.
@@ -597,8 +659,11 @@ where $m$ indexes candidate estimators.
 
 The oracle estimator uses the same orthogonal score and fold partition as AEGIS but plugs in true nuisances (e.g., $m_0, g_0$ in PLR). For Monte Carlo replication $b$, compute
 
+
 $$
-\hat{\Sigma}^{(b)}_{\mathrm{oracle}} = \left(\hat{J}^{(b)}_0\right)^{-1} \hat{\Omega}^{(b)}_0 \left(\hat{J}^{(b)}_0\right)^{-T},
+
+\hat{\Sigma}^{(b)}\_{\mathrm{oracle}} = \left(\hat{J}^{(b)}\_0\right)^{-1} \hat{\Omega}^{(b)}\_0 \left(\hat{J}^{(b)}\_0\right)^{-T},
+
 $$
 
 with $\hat{J}^{(b)}_0$ and $\hat{\Omega}^{(b)}_0$ evaluated using true nuisance values on simulated data. Report:
@@ -1068,3 +1133,4 @@ The first publication will focus on:
 ---
 
 _End of DML‑aligned blueprint._
+$$
