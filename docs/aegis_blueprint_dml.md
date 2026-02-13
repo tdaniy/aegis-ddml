@@ -278,21 +278,15 @@ Calibration requirement (mandatory for publication):
 **Theorem 1 (Consistency, asymptotic linearity, and normality).** Under the regularity conditions above,
 
 $$
-
 \sqrt{n}(\hat{\theta}-\theta*0) = -J_0^{-1}\frac{1}{\sqrt{n}}\sum*{i=1}^n \psi(W_i;\theta_0,\eta_0)+ r_n,\quad r_n=o_p(1).
-
-
 $$
 
 Hence $\hat{\theta} \overset{p}{\to} \theta_0$, and
 
 $$
-
 \sqrt{n}(\hat{\theta}-\theta_0)\xrightarrow{d}\mathcal{N}(0,\Sigma_0),
 \quad
 \Sigma_0=J_0^{-1}\Omega_0J_0^{-T}.
-
-
 $$
 
 The influence function is $\phi(W)=-J_0^{-1}\psi(W;\theta_0,\eta_0)$.
