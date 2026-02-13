@@ -35,7 +35,7 @@ Completion check:
 - You can identify which package modules implement each theoretical claim.
 - You can run the bootstrap package checks described in `IMPLEMENTATION_GUIDE.md`.
 
-## 0.1 Notation and glossary
+## Notation and glossary
 
 | Symbol / Term         | Meaning                                                        |
 | --------------------- | -------------------------------------------------------------- |
