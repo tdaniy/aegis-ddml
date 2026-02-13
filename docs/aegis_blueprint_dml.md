@@ -618,8 +618,14 @@ $$
 with $\hat{J}^{(b)}_0$ and $\hat{\Omega}^{(b)}_0$ evaluated using true nuisance values on simulated data. Report:
 
 - variance ratio $\mathrm{RE}_m$
-- CI length ratio $\mathbb{E}[\text{Length}_m] / \mathbb{E}[\text{Length}_{\mathrm{oracle}}]$
-- absolute variance gap $\mathrm{Var}(\hat{\theta}_m) - \mathrm{Var}(\hat{\theta}_{\mathrm{oracle}})$
+- CI length ratio
+  $$
+  \mathbb{E}[\text{Length}_m] / \mathbb{E}[\text{Length}_{\mathrm{oracle}}]
+  $$
+- absolute variance gap
+  $$
+  \mathrm{Var}(\hat{\theta}_m) - \mathrm{Var}(\hat{\theta}_{\mathrm{oracle}})
+  $$
 
 ---
 
