@@ -274,7 +274,7 @@ $$
 \sqrt{n}(\hat{\theta}-\theta_0) = -J_0^{-1}\frac{1}{\sqrt{n}}\sum_{i=1}^n \psi(W_i;\theta_0,\eta_0)+ r_n,\quad r_n=o_p(1).
 $$
 
-Hence $\hat{\theta}\xrightarrow{p}\theta_0$, and
+Hence $\hat{\theta}\rightarrow{p}\theta_0$, and
 
 $$
 \sqrt{n}(\hat{\theta}-\theta_0)\xrightarrow{d}\mathcal{N}(0,\Sigma_0),
