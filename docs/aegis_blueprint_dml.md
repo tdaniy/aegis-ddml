@@ -308,9 +308,16 @@ $$
 
 5. Report both:
    - Wald CI:
-     $$\left[\hat{\theta}_{\mathrm{base}} \pm z_{1-\alpha/2}\,\widehat{SE}\right]$$.
-   - Stress-envelope CI:
-     $$\mathrm{CI}_{\text{stress}} = \left[\hat{\theta}_{\mathrm{base}} - z_{1-\alpha/2}\,\widehat{SE} - B_{0.95},\; \hat{\theta}_{\mathrm{base}} + z_{1-\alpha/2}\,\widehat{SE} + B_{0.95}\right]$$.
+
+$$
+\left[\hat{\theta}_{\mathrm{base}} \pm z_{1-\alpha/2}\,\widehat{SE}\right].
+$$
+
+- Stress-envelope CI:
+
+$$
+\mathrm{CI}_{\text{stress}} = \left[\hat{\theta}_{\mathrm{base}} - z_{1-\alpha/2}\,\widehat{SE} - B_{0.95},\; \hat{\theta}_{\mathrm{base}} + z_{1-\alpha/2}\,\widehat{SE} + B_{0.95}\right].
+$$
 
 Stability flag by ratio $B_{0.95}/\widehat{SE}$:
 
