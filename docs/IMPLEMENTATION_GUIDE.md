@@ -104,6 +104,12 @@ cd ~/src/ob1/<repo-dir>
 git checkout -b feat/aegis-bootstrap
 ```
 
+Solo developer exception:
+
+If you are the only contributor and intentionally work directly on `main`,
+you may skip creating `feat/aegis-bootstrap`. Record this as:
+`A.5 waived (solo developer on main)`.
+
 ### A.6 Create standard folders
 
 ```bash
@@ -114,7 +120,7 @@ mkdir -p R tests/testthat analysis/sim analysis/figures analysis/tables analysis
 Phase A done criteria:
 
 - toolchain works,
-- repository branch created,
+- repository branch created, or `A.5 waived (solo developer on main)`,
 - required directories exist.
 
 ---

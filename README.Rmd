@@ -1,0 +1,14 @@
+---
+output: github_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# aegis
+
+`aegis` is a minimal package scaffold for the AEGIS DML-lite inference framework.

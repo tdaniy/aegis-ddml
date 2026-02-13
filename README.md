@@ -1,1 +1,3 @@
-AEGIS is an open‑source R research framework focused on **finite-sample reliability of ML-assisted inference**: statistically valid inference when machine learning is used inside a modeling pipeline.
+# aegis
+
+`aegis` is a minimal package scaffold for the AEGIS DML-lite inference framework.

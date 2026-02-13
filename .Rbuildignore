@@ -1,0 +1,7 @@
+^docs$
+^README\.Rmd$
+^LICENSE\.md$
+^analysis$
+^paper$
+^artifacts$
+^data-raw$
