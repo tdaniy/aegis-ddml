@@ -244,28 +244,19 @@ Operationalization of nuisance-rate assumptions is mandatory in empirical and si
 For nuisance components $j\in\{1,2\}$ and training fractions $f\in\{0.4,0.6,0.8,1.0\}$, define repeated cross-fitted out-of-fold loss gaps
 
 $$
-
 \Delta_j(f)=\mathrm{OOF_Loss}\_j(f)-\mathrm{OOF_Loss}\_j(1.0).
-
-
 $$
 
 Estimate learning-curve slopes from
 
 $$
-
 \log(\Delta_j(f)+\epsilon)=c_j-2a_j\log(nf), \quad \epsilon=10^{-6},
-
-
 $$
 
 and define the product-rate proxy
 
 $$
-
 S:=a_1+a_2.
-
-
 $$
 
 Interpretation and thresholding rule:
