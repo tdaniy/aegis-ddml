@@ -585,6 +585,19 @@ Phase E post-implementation note:
 - Full-profile rerun with logistic diagnostic classifier (AUC ≈ 0.718, $P(\text{miss}\mid \text{FAIL}) \approx 0.149$) still failed coverage, bias, efficiency, and boundary sharpness gates; diagnostics improved but did not meet the risk-stratification threshold.
 - Current evidence does not validate the scientific claims; treat the theory as unproven under the current implementation and simulation regimes until gates pass.
 - Next intent: restore the original (linear) learner in boundary/adversarial sims, adopt a hybrid diagnostic rule (classifier score + weak-signal cutoff) with higher `pi_min`, and rerun full-profile gates.
+- Full-profile run on 2026-02-14 (linear learner, hybrid diagnostic rule) completed in 23m 50.3s (boundary 20m 37s, calibration 1m 54s, adversarial 1m 18s).
+- Gate status after that run: PASS for efficiency, boundary sharpness, adversarial audit, convergence, leakage, reproducibility, tests; FAIL for coverage validity (0.9038), bias control (0.50), stress‑CI bound hold (0.8333), and diagnostic calibration ($P(\text{miss}\mid \text{FAIL})=0.168$, AUC=0.738).
+- Diagnostics are now discriminative (AUC above threshold) but still do not concentrate misses enough; reliability gates remain unmet.
+
+Minimal next-step plan:
+
+- Keep the current diagnostics and publish the negative results as a software-first reliability audit; defer theoretical claims.
+- If pursuing the scientific claim, focus only on stress‑CI bound and calibration risk stratification: inflate the stress radius (e.g., 0.99 quantile or multiplicative factor) and require FAIL to satisfy both classifier score and a stricter weak-signal cutoff (raise `pi_min` again).
+- Avoid further changes to learner complexity until the above two gates pass; otherwise results become confounded.
+
+Post-implementation conclusions (software-first positioning):
+
+This release should be positioned as a software-first contribution: a reproducible pipeline for auditing finite-sample reliability of ML-assisted inference, including diagnostics, stress-CI construction, and adversarial benchmarks. In the current full-profile study, multiple release gates (coverage, bias control, stress-CI bound, and risk-stratification) do not pass, while others (efficiency, adversarial audit, convergence, leakage, reproducibility) do. These negative results are reported transparently, and the theoretical reliability claims should be treated as unvalidated under the present design. The package is therefore best framed as an empirical audit toolkit and benchmark framework, with future work required to strengthen diagnostic calibration and finite-sample guarantees.
 
 Judgements:
 
