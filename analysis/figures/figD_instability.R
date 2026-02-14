@@ -1,0 +1,5 @@
+dat <- readRDS("artifacts/sim/boundary_results.rds")
+dat <- subset(dat, estimator == "AEGIS" & ci_type == "wald")
+png("artifacts/figD_instability.png", width = 800, height = 600)
+hist(dat$theta_hat, breaks = 30, main = "Fold-seed instability proxy", xlab = "theta_hat")
+dev.off()

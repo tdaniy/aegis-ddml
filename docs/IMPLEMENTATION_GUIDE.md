@@ -333,6 +333,14 @@ Phase C done criteria:
 - no leakage detected,
 - LM/GLM toy examples return stable inferential outputs.
 
+Phase C post-implementation note:
+
+- Learner API now supports separate `fit_params` / `predict_params` and a formula interface (`interface = "formula"`).
+- Cross-fitting repeats are fully executed; results aggregate with an MI-style variance correction: `mean(vcov) + (1 + 1/(R - 1)) * var(theta)`.
+- Weak-signal diagnostic uses a relative variance ratio (`var(d_tilde) / var(d)`) with sample-size-aware thresholds and relaxed defaults (`max(0.005, 1/n)` fail, `max(0.02, 2/n)` warn).
+- GLM solver includes step-halving, adaptive convergence tolerances (`tol = 1e-6`, `tol_score = 1e-6`), and a naive GLM starting value using `y ~ d + controls`.
+- Influence diagnostics include standardized score summaries; leakage diagnostics include OOF coverage.
+
 ---
 
 ## D. Reproducible evaluation pipeline
@@ -430,6 +438,30 @@ Phase D done criteria:
 - clean checkout can rerun all artifacts via `targets::tar_make()`,
 - boundary, calibration, and adversarial audit artifacts are generated,
 - produced tables/figures are identical across reruns with fixed seed.
+
+Phase D post-implementation note:
+
+- Implemented baseline simulation scripts in `analysis/sim/` with deterministic sub-seeds, comparators (AEGIS, naive, sample-split, oracle), and Wald/stress/CFEL CIs in the boundary experiment.
+- Adversarial benchmark now runs both LM and GLM DGPs with aligned learners and produces coverage/CI outputs for each estimator.
+- Calibration study reports diagnostic operating metrics (`P(miss|FAIL)`, `P(miss|PASS)`, FPR, FNR).
+- Added manifest generation for each sim run (commit hash, grid, seed root, timestamp) via `jsonlite`.
+- Added minimal figure/table/empirical scripts plus `_targets.R` and `analysis/run_all.R`.
+- Added fast-mode switches for heavy pipelines via `AEGIS_FAST=1` in both `_targets.R` and `analysis/run_all.R`.
+- `targets::tar_make()` requires the package installed; in this workspace we use a local lib (`R_LIBS=./.Rlib`).
+- `tar_make()` produces a `_targets/` store and writes artifacts under `artifacts/sim/` and `artifacts/empirical/`.
+- `analysis/run_all.R` assumes artifacts directories exist and regenerates figures/tables from current artifacts.
+- `renv.lock` placeholder added; update with `renv::snapshot()` once dependency set stabilizes.
+- Added `analysis/run_targets_with_progress.R` to run the full pipeline with per-target progress and ETA reporting (writes `artifacts/targets_progress.csv`).
+- Added `analysis/estimate_full_runtime.R` to estimate full pipeline runtime from fast-mode timings (writes `artifacts/targets_runtime_estimate.csv`).
+- Added `analysis/sim/config.R` with `fast`/`default`/`full` profiles and `AEGIS_PROFILE` selection; `AEGIS_FAST=1` forces the fast profile.
+- Added `analysis/run_targets_parallel.R` for multicore execution via `{future}` with `AEGIS_WORKERS` (default 4).
+
+Phase D sign-off (default profile):
+
+- Run completed on 2026-02-14: `AEGIS_PROFILE=default AEGIS_WORKERS=6 R_LIBS=./.Rlib Rscript analysis/run_targets_parallel.R`
+- Pipeline finished in 3m 15.7s with all nine targets completed.
+- Artifacts written under `artifacts/sim/` and `artifacts/empirical/`.
+- Full profile run remains optional for release gates.
 
 ---
 
@@ -529,6 +561,49 @@ Provide:
 - `renv.lock`,
 - generated artifacts,
 - rerun instructions in README.
+
+Phase E post-implementation note:
+
+- Ran `devtools::document()` and `devtools::test()` on 2026-02-14 (36 tests, 0 failures).
+- Ran `devtools::check()` with a local CRAN shim (`cranshim/`) to avoid network access; result: 0 errors, 0 warnings, 4 notes.
+- `devtools::check()` notes: suggested packages `future` and `future.callr` not available; hidden directories `.github` and `.Rlib`; unable to verify current time; non-standard top-level files `_targets`, `_targets.R`, `cranshim`, `renv.lock`.
+- `renv::status()` reports no packages installed in the project library; collaborators should run `renv::restore()` before executing pipelines.
+- Release gate summary generated via `analysis/phase_e_release_gates.R` (written to `artifacts/release_gates.csv`): PASS for coverage, bias control, efficiency, and convergence; remaining gates are NA due to missing stress-bound, boundary-psi grid, diagnostic AUC, DoubleML comparators, leakage summary, rerun comparison, and test-repeat metrics.
+- Artifact integrity check via `analysis/check_artifacts.R` reports all required artifacts present.
+- CI workflow exists in `.github/workflows/ci.yml` to run `devtools::check()`, `devtools::test()`, a fast targets pipeline, and artifact integrity checks.
+- Calibration now chooses the weak-signal score sign that maximizes calibration-split AUC, then selects the FAIL threshold via Youden’s J with a `pi_min` floor (tracked in `diagnostics_operating_chars.csv`).
+- Full profile adversarial grid expanded to `beta = {0.0, 0.5, 0.75, 1.0}`; default profile omits `0.75/1.0` for faster iteration.
+- Updated `_targets.R` calibration artifacts to match the auto-sign + Youden logic so AUC and threshold metadata are preserved in the artifacts.
+- Added a lightweight polynomial basis learner for AEGIS sims (squares, interactions, sin/cos terms) and switched LM-based simulations to use it for nuisance fits.
+- Full-profile pipeline run on 2026-02-14: `AEGIS_PROFILE=full AEGIS_WORKERS=6 R_LIBS=./.Rlib Rscript analysis/run_targets_parallel.R` completed in 26m 6.2s (boundary 22m 21s, calibration 2m 11s, adversarial 1m 32s).
+- Gate status after the full run: PASS for efficiency, boundary sharpness, adversarial audit, convergence, leakage, reproducibility, tests; FAIL for coverage validity, bias control, stress‑CI bound hold, diagnostic calibration.
+- Diagnostic calibration now reports AUC and thresholds; current full-profile AUC remains low (~0.45) and $P(\text{miss}\mid \text{FAIL})$ remains near zero.
+- Coverage and bias gates worsened after switching to the polynomial basis, suggesting the nuisance fit improvement alone is insufficient in weak-signal regimes.
+- Full-profile pipeline rerun after composite diagnostics, ridge regularization, increased repeats, and stress‑CI inflation completed in 28m 24.6s (boundary 24m 36.6s, calibration 2m 35.4s, adversarial 1m 11.3s).
+- Gate status after the rerun: PASS for stress‑CI bound, convergence, leakage, reproducibility, tests; FAIL for coverage validity, bias control, efficiency, boundary sharpness, diagnostic calibration (AUC ≈ 0.484), and adversarial audit (0.6875 vs 0.70 threshold).
+- The composite diagnostic and regularization changes improved the stress‑CI bound gate but degraded efficiency and boundary sharpness, indicating an unfavorable variance/bias tradeoff under the current settings.
+- Full-profile rerun with logistic diagnostic classifier (AUC ≈ 0.718, $P(\text{miss}\mid \text{FAIL}) \approx 0.149$) still failed coverage, bias, efficiency, and boundary sharpness gates; diagnostics improved but did not meet the risk-stratification threshold.
+- Current evidence does not validate the scientific claims; treat the theory as unproven under the current implementation and simulation regimes until gates pass.
+- Next intent: restore the original (linear) learner in boundary/adversarial sims, adopt a hybrid diagnostic rule (classifier score + weak-signal cutoff) with higher `pi_min`, and rerun full-profile gates.
+
+Judgements:
+
+- The software implementation is functionally complete for Phase E artifacts, but scientific validation remains incomplete because key release gates still fail on the full-profile run.
+- The current weak-signal diagnostic signal is not predictive enough under the simulated regimes, so theoretical diagnostic claims are not empirically supported yet.
+- The stress‑CI bound is too optimistic for the current stress replication count, failing the bound-hold gate.
+
+Proposed plan:
+
+- Strengthen diagnostics with a composite score that incorporates weak-signal ratio, fold-seed instability, and influence summaries; calibrate sign and thresholds on the calibration split with a higher `pi_min` (e.g., 0.2).
+- Increase cross-fit repeats (e.g., 3–5) and/or add regularization to nuisance fits to improve coverage and bias in weak-signal regimes.
+- Inflate the stress radius or increase the stress quantile (e.g., 0.975) to improve the stress‑CI bound hold rate.
+- Re-run full profile and re-evaluate release gates after the changes.
+
+Phase E sign-off (2026-02-14):
+
+- Pre-release command matrix completed with local CRAN shim; checks and tests pass with notes documented above.
+- Evidence bundle and artifacts present under `artifacts/` with reproducibility instructions in README.
+- Release gate evaluation is partially complete (PASS/NA as above); release-candidate decision rule remains pending until NA gates are computed.
 
 Phase E done criteria:
 

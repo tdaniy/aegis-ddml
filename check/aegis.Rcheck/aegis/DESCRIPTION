@@ -1,0 +1,20 @@
+Package: aegis
+Type: Package
+Title: AEGIS DML Lite Inference Framework
+Version: 0.0.0.9000
+Authors@R: 
+    person("AEGIS", "Authors", , "aegis@example.org", role = c("aut", "cre"))
+Description: Minimal scaffold for cross-fitted orthogonal inference in R.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports: stats
+Suggests: testthat (>= 3.0.0), withr, jsonlite, future, future.callr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Config/testthat/edition: 3
+NeedsCompilation: no
+Packaged: 2026-02-14 12:56:16 UTC; tdaniyar
+Author: AEGIS Authors [aut, cre]
+Maintainer: AEGIS Authors <aegis@example.org>
+Depends: R (>= 3.5.0)
+Built: R 4.3.3; ; 2026-02-14 12:56:19 UTC; unix

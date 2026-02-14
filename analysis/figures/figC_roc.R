@@ -1,0 +1,6 @@
+dat <- read.csv("artifacts/sim/diagnostics_operating_chars.csv")
+png("artifacts/figC_roc.png", width = 800, height = 600)
+vals <- c(dat$p_miss_fail, dat$p_miss_pass)
+names(vals) <- c("P(miss|FAIL)", "P(miss|PASS)")
+barplot(vals, main = "Diagnostic miss rates")
+dev.off()

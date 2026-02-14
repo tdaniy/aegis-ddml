@@ -1,0 +1,5 @@
+dat <- readRDS("artifacts/sim/boundary_results.rds")
+dat <- subset(dat, estimator == "AEGIS" & ci_type == "wald")
+png("artifacts/figB_boundary.png", width = 800, height = 600)
+plot(dat$beta, dat$cover, pch = 16, xlab = "beta", ylab = "Coverage", main = "Boundary experiment")
+dev.off()

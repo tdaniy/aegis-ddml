@@ -1,0 +1,19 @@
+aegis_fit               Fit an AEGIS Model
+aegis_spec              Create an AEGIS Model Specification
+confint.aegis_fit       Confidence Interval for an AEGIS Fit
+crossfit_predict        Cross-Fitted Out-of-Fold Predictions
+diagnostics_influence   Influence Diagnostic
+diagnostics_leakage     Leakage Diagnostic
+diagnostics_weak_signal
+                        Weak-Signal Diagnostic
+fit_nuisance_rM         Fit Treatment Nuisance with Cross-Fitting
+fit_nuisance_rY         Fit Outcome Nuisance with Cross-Fitting
+inference_glm           Orthogonal Inference for GLM Targets
+inference_lm            Orthogonal Inference for Linear Targets
+learner_base            Create a Base Learner Specification
+make_folds              Generate Cross-Fitting Folds
+nuis_spec               Create a Nuisance Specification
+strategy_crossfit       Create a Cross-Fitting Strategy
+summary.aegis_fit       Summarize an AEGIS Fit
+target_glm              Define a Generalized Linear Target
+target_lm               Define a Linear Target

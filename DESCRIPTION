@@ -11,7 +11,10 @@ Imports:
     stats
 Suggests: 
     testthat (>= 3.0.0),
-    withr
+    withr,
+    jsonlite,
+    future,
+    future.callr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
